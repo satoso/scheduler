@@ -40,3 +40,9 @@ gem 'spring',        group: :development
 
 # added by satoso
 gem 'thin'
+gem 'pry-rails', group: [:development, :test]
+gem 'pry-doc', group: [:development, :test]
+gem 'pry-byebug', group: [:development, :test]
+gem 'hirb', group: [:development, :test]
+gem 'hirb-unicode', group: [:development, :test]
+

@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
+  root 'schedules#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
@@ -13,6 +14,17 @@ Rails.application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
+  get ':yyyymm', to: 'schedules#index'
+  resources :members do
+    resources :schedules, only: :index do
+      collection do
+        post :create
+        # get  'edit/:yyyymm', to: :edit    # => これだと edit_member_schedule_path helper がつくられない
+        get  :edit,   path: 'edit/:yyyymm'  # => OK
+        put  :update
+      end
+    end
+  end
 
   # Example resource route with options:
   #   resources :products do

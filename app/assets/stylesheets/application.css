@@ -12,4 +12,14 @@
  *
  *= require_tree .
  *= require_self
+ *= require bootstrap.min
  */
+table {
+  border-collapse: collapse;
+
+  p { margin: 0;  padding: 0; }
+}
+td {
+  border: 1px solid black;
+}
+

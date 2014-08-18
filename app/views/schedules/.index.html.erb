@@ -1,0 +1,34 @@
+<table>
+  <tr>
+    <th>日付</th>
+    <th>曜日</th>
+    <th>時間</th>
+    <% @members.each do |member| %>
+      <th><%= link_to member.name, edit_member_schedules_path(member, yyyymm: @from_yyyymm) %></th>
+    <% end %>
+    <th>memo</th>
+  </tr>
+
+  <% @days.each do |day| %>
+    <% @times.each_with_index do |time, time_idx| %>
+    <tr>
+      <% if time_idx == 0 %>
+      <td rowspan="<%= @times.count %>"><%= day.strftime('%m/%d') %></td>
+      <td rowspan="<%= @times.count %>"><%= @weekdays[day.wday] %></td>
+      <% end %>
+
+      <td><%= time %></td>
+
+      <% @members.each do |member| %>
+        <td><%= @schedules_a.select{|s| s['date'] == day && s['time'] == time_idx && s['member_id'] == member.id]}.first %></td>
+      <% end %>
+
+      <td>
+      <% @memos_h[date: day, time: time_idx].to_a.each do |m| %>
+        <p><%= m %></p>
+      <% end %>
+      </td>
+    </tr>
+    <% end %>
+  <% end %>
+</table>

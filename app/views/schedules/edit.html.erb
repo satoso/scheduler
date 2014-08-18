@@ -1,0 +1,43 @@
+<%= form_for :schedules do |form| %>
+  <table>
+    <tr>
+      <th>日付</th>
+      <th>曜日</th>
+      <th>時間</th>
+      <% @members.each do |member| %>
+        <th><%= link_to member.name, edit_member_schedules_path(member, yyyymm: @from_yyyymm) %></th>
+      <% end %>
+      <th>memo</th>
+    </tr>
+
+    <% @disp_h.each do |k_d,v_d| %>
+      <tr>
+        <% if k_d[:time] == 0 %>
+        <td rowspan="3"><%= k_d[:date].strftime('%m/%d') %></td>
+        <td rowspan="3"><%= @weekdays[k_d[:date].wday] %></td>
+        <% end %>
+
+        <td><%= @times[k_d[:time]] %></td>
+
+        <% v_d[:schedules].each do |k_s,v_s| %>
+          <td>
+            <ul>
+              <% @schedules_value.each do |val| %>
+              <li><%= form.radio_button :schedule, val, checked: v_s.to_s == val %>
+                  <%= form.label :schedule, val, value: val %></li>
+              <% end %>
+            </ul>
+          </td>
+        <% end %>
+
+        <td>
+        <% v_d[:memos].each do |k_m,v_m| %>
+          <% if v_m %>
+          <p><%= v_m %>(<%= @members.find_by(id: k_m).name %>)</p>
+          <% end %>
+        <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
