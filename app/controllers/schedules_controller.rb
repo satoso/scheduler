@@ -9,64 +9,45 @@ class SchedulesController < ApplicationController
     from = get_from(params[:yyyymm].presence)
     return redirect_to root_path if from.nil?  # return が必要
     to = get_to(from)
-    days = available_days(from..to)
+    @days = available_days(from..to)
+    @times_name = TIMES_NAME
 
-    # DB読み込み
-    if params[:member_id]
-      @members = Member.where(id: params[:member_id])
-    else
-      @members = Member.all.order(:order)
-    end
-    schedules_a = Schedule.where(date: days).to_a.map(&:serializable_hash)
+    @members = Member.all.order(:order)
+    @schedules = Schedule.where(date: @days)
 
-    # 一覧表示用Hashを作成
-    # 例: {:date=>Sun, 17 Aug 2014, :time=>0}
-    #     =>{:schedules=>{1=>nil, 2=>nil, 3=>nil, 4=>nil, 5=>nil}, 
-    #        :memos=>{1=>nil, 2=>nil, 3=>nil, 4=>nil, 5=>nil}},
-    @disp_h = {}
-    days.each do |d|
-      TIMES_NAME.each_with_index do |t, t_idx|
-        @disp_h[date: d, time: t_idx] = {schedules: {}, memos: {}}
-        @members.each do |m|
-          @disp_h[date: d, time: t_idx][:schedules][m.id] = nil
-          @disp_h[date: d, time: t_idx][:memos][m.id]     = nil
-        end
-      end
-    end
-    #binding.pry
-
-    # scheduleの値をHashに入れ込む
-    # 例: {:date=>Sun, 17 Aug 2014, :time=>0}
-    #     =>{:schedules=>{1=>nil, 2=>"○", 3=>"○", 4=>nil, 5=>nil}, 
-    #        :memos=>{1=>nil, 2=>"メモ", 3=>"メモ", 4=>nil, 5=>nil}},
-    schedules_a.each do |s|
-      if d = @disp_h[date: s['date'], time: s['time']]
-        d[:schedules][s['member_id']] = s['schedule']
-        d[:memos][s['member_id']]     = s['memo']
-      end
-    end
-    #binding.pry
-
-    @times = TIMES_NAME
-    @weekdays = WEEKDAYS_NAME
     @schedules_value = SCHEDULES_VALUE
+    @weekdays_name = WEEKDAYS_NAME
     @from_yyyymm = from.strftime('%Y%m')
     # binding.pry
   end
 
   def edit
-    index
-    # from = get_from(params[:yyyymmdd].presence)
-    # redirect_to index_path if from.nil?
-    # to = get_to(from)
+    # 表示範囲を決める
+    from = get_from(params[:yyyymm].presence)
+    return redirect_to root_path if params[:yyyymm].nil?  # return が必要
+    to = get_to(from)
+    @days = available_days(from..to)
+    @times_name = TIMES_NAME
 
-    # @schedules = Schedule.where(date: (from..to), member_id: params[:member_id])
-    # @member = Member.where(id: params[:member_id]).first
-    # @times = TIMES
-    # @schedules_sel = SCHEDULES_SEL
-    # @days = (from..to).to_a
-    # @from = from.strftime('%Y%m')
-    # binding.pry
+    @members = Member.where(id: params[:member_id])
+
+    @days.each do |d|
+      @times_name.each_with_index do |t, t_idx|
+        Schedule.find_or_create_by(
+          date:      d,
+          time:      t_idx,
+          member_id: @members.first.id,
+          schedule:  '',
+          memo:      '',
+        )
+      end
+    end
+    @schedules = Schedule.where(date: @days, member_id: @members.first.id)
+
+    @schedules_value = SCHEDULES_VALUE
+    @weekdays_name = WEEKDAYS_NAME
+    @from_yyyymm = from.strftime('%Y%m')
+    binding.pry
   end
 
   private
@@ -75,7 +56,7 @@ class SchedulesController < ApplicationController
       return nil unless /^\d{6}$/ === arg
 
       begin
-        from = Time.parse(arg.to_s + '01').to_datetime.beginning_of_month
+        from = Time.parse(arg.to_s + '01').to_date.beginning_of_month
       rescue ArgumentError
         from = nil
       end

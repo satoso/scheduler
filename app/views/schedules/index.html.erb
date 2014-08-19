@@ -3,32 +3,36 @@
     <th>日付</th>
     <th>曜日</th>
     <th>時間</th>
-    <% @members.each do |member| %>
-      <th><%= link_to member.name, edit_member_schedules_path(member, yyyymm: @from_yyyymm) %></th>
+    <% @members.each do |m| %>
+      <th><%= link_to m.name, edit_member_schedules_path(m, yyyymm: @from_yyyymm) %></th>
     <% end %>
     <th>memo</th>
   </tr>
 
-  <% @disp_h.each do |k_d,v_d| %>
+  <% @days.each do |d| %>
+  <% @times_name.each_with_index do |t, t_idx| %>
     <tr>
-      <% if k_d[:time] == 0 %>
-      <td rowspan="3"><%= k_d[:date].strftime('%m/%d') %></td>
-      <td rowspan="3"><%= @weekdays[k_d[:date].wday] %></td>
+      <% if t_idx == 0 %>
+        <td rowspan="3"><%= d.strftime('%m/%d') %></td>
+        <td rowspan="3"><%= @weekdays_name[d.wday] %></td>
       <% end %>
 
-      <td><%= @times[k_d[:time]] %></td>
+      <td><%= t %></td>
 
-      <% v_d[:schedules].each do |k_s,v_s| %>
-        <td><%= v_s.to_s %></td>
+      <% @members.each do |m| %>
+        <td><%=
+          @schedules.find { |s|
+            s.date == d && s.time == t_idx && s.member_id == m.id
+          }.try(:schedule) || ''
+        %></td>
       <% end %>
 
       <td>
-      <% v_d[:memos].each do |k_m,v_m| %>
-        <% if v_m %>
-        <p><%= v_m %>(<%= @members.find_by(id: k_m).name %>)</p>
+        <% @schedules.find_all { |s| s.date == d && s.time==t_idx }.each do |s| %>
+          <p><%= s.memo %>(<%= @members.find { |m| m.id == s.member_id }.name %>)</p>
         <% end %>
-      <% end %>
       </td>
     </tr>
+  <% end %>
   <% end %>
 </table>
