@@ -1,7 +1,8 @@
 class SchedulesController < ApplicationController
-  DEFAULT_DURATION_MONTHS = 2
+  # TODO: DRY!
+  DEFAULT_DURATION_MONTHS = 1
   TIMES_NAME = %w(朝 昼 夜)
-  SCHEDULES_VALUE = %w(○ △ ×)
+  AVAILABILITIES_VALUE = %w(○ △ × ‐)
   WEEKDAYS_NAME = %w(日 月 火 水 木 金 土)
 
   def index
@@ -9,13 +10,13 @@ class SchedulesController < ApplicationController
     from = get_from(params[:yyyymm].presence)
     return redirect_to root_path if from.nil?  # return が必要
     to = get_to(from)
-    @days = available_days(from..to)
+    @days = disp_days(from..to)
     @times_name = TIMES_NAME
 
-    @members = Member.all.order(:order)
+    @members = Member.all
     @schedules = Schedule.where(date: @days)
 
-    @schedules_value = SCHEDULES_VALUE
+    @availabilities_value = AVAILABILITIES_VALUE
     @weekdays_name = WEEKDAYS_NAME
     @from_yyyymm = from.strftime('%Y%m')
     # binding.pry
@@ -26,7 +27,7 @@ class SchedulesController < ApplicationController
     from = get_from(params[:yyyymm].presence)
     return redirect_to root_path if params[:yyyymm].nil?  # return が必要
     to = get_to(from)
-    @days = available_days(from..to)
+    @days = disp_days(from..to)
     @times_name = TIMES_NAME
 
     @members = Member.where(id: params[:member_id])
@@ -34,20 +35,26 @@ class SchedulesController < ApplicationController
     @days.each do |d|
       @times_name.each_with_index do |t, t_idx|
         Schedule.find_or_create_by(
-          date:      d,
-          time:      t_idx,
-          member_id: @members.first.id,
-          schedule:  '',
-          memo:      '',
+          date:          d,
+          time:          t_idx,
+          member_id:     @members.first.id,
+          availability:  '',
+          note:          '',
         )
       end
     end
     @schedules = Schedule.where(date: @days, member_id: @members.first.id)
 
-    @schedules_value = SCHEDULES_VALUE
+    @availabilities_value = AVAILABILITIES_VALUE
     @weekdays_name = WEEKDAYS_NAME
     @from_yyyymm = from.strftime('%Y%m')
-    binding.pry
+    #binding.pry
+  end
+
+  def create
+    # binding.pry
+    Schedule.update(schedule_params.keys, schedule_params.values)
+    redirect_to root_path
   end
 
   private
@@ -70,12 +77,22 @@ class SchedulesController < ApplicationController
     (from + (DEFAULT_DURATION_MONTHS - 1).months).end_of_month
   end
 
-  def available_days(range)
-    days = []
-    range.to_a.each do |d|
-      days << d if d.saturday? || d.sunday?
-    end
-    days
+  def disp_days(range)
+    range.to_a.select { |d| d.saturday? || d.sunday? }
+    # days = []
+    # range.to_a.each do |d|
+    #   days << d if d.saturday? || d.sunday?
+    # end
+    # days
   end
 
+  def schedule_params
+    #params.require(:schedules).permit!
+    params.require(:schedules).each do |k,v|
+      ActionController::Parameters.new(v).permit(:availability, :note)
+    end
+    # params.require(:schedules).map do |param|
+    #   ActionController::Parameters.new(param.to_hash).permit(:availability, :note)
+    # end
+  end
 end

@@ -11,23 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140813012535) do
+ActiveRecord::Schema.define(version: 20140821134044) do
 
   create_table "members", force: true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "name"
-    t.integer  "order"
   end
 
   create_table "schedules", force: true do |t|
     t.date     "date"
     t.integer  "time"
-    t.string   "schedule"
-    t.string   "memo"
+    t.string   "availability"
+    t.text     "note"
+    t.integer  "member_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "member_id"
   end
+
+  add_index "schedules", ["member_id"], name: "index_schedules_on_member_id"
 
 end

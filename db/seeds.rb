@@ -9,14 +9,14 @@
 #require 'date'
 
 (1..5).each do |n|
-  Member.create(name: 'メンバ' + n.to_s, order: n)
+  Member.create(name: 'メンバ' + n.to_s)
 end
 
 (1..5).each do |n|
-  Member.find(n).schedules << Schedule.create(date: n.days.from_now,     time: 0, schedule: '○', memo: 'メモ')
-  Member.find(n).schedules << Schedule.create(date: (n+1).days.from_now, time: 0, schedule: '○', memo: 'メモ')
-  Member.find(n).schedules << Schedule.create(date: (n+1).days.from_now, time: 1, schedule: '×', memo: 'メモ')
-  Member.find(n).schedules << Schedule.create(date: (n+2).days.from_now, time: 2, schedule: '○', memo: 'メモ')
-  Member.find(n).schedules << Schedule.create(date: (n+4).days.from_now, time: 0, schedule: '○', memo: 'メモ')
+  Member.find(n).schedules << Schedule.create(date: n.days.from_now,     time: 0, availability: '○', note: 'メモ')
+  Member.find(n).schedules << Schedule.create(date: (n+1).days.from_now, time: 0, availability: '○', note: 'メモ')
+  Member.find(n).schedules << Schedule.create(date: (n+1).days.from_now, time: 1, availability: '×', note: 'メモ')
+  Member.find(n).schedules << Schedule.create(date: (n+2).days.from_now, time: 2, availability: '○', note: 'メモ')
+  Member.find(n).schedules << Schedule.create(date: (n+4).days.from_now, time: 0, availability: '○', note: 'メモ')
 end
 

@@ -1,4 +1,4 @@
-<table>
+<table class="table table-bordered">
   <tr>
     <th>日付</th>
     <th>曜日</th>
@@ -6,7 +6,7 @@
     <% @members.each do |m| %>
       <th><%= link_to m.name, edit_member_schedules_path(m, yyyymm: @from_yyyymm) %></th>
     <% end %>
-    <th>memo</th>
+    <th>メモ</th>
   </tr>
 
   <% @days.each do |d| %>
@@ -23,13 +23,15 @@
         <td><%=
           @schedules.find { |s|
             s.date == d && s.time == t_idx && s.member_id == m.id
-          }.try(:schedule) || ''
+          }.try(:availability) || ''
         %></td>
       <% end %>
 
       <td>
         <% @schedules.find_all { |s| s.date == d && s.time==t_idx }.each do |s| %>
-          <p><%= s.memo %>(<%= @members.find { |m| m.id == s.member_id }.name %>)</p>
+          <% unless s.note.blank? %>
+          <p><%= s.note %>(<%= @members.find { |m| m.id == s.member_id }.name %>)</p>
+          <% end %>
         <% end %>
       </td>
     </tr>

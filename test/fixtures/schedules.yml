@@ -1,13 +1,15 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  date: 2014-08-13
+  date: 2014-08-21
   time: 1
-  schedule: MyString
-  memo: MyString
+  availability: MyString
+  note: MyText
+  member_id: 
 
 two:
-  date: 2014-08-13
+  date: 2014-08-21
   time: 1
-  schedule: MyString
-  memo: MyString
+  availability: MyString
+  note: MyText
+  member_id: 
