@@ -1,10 +1,15 @@
+<ul class="pager">
+  <li><%= link_to 'Prev',  root_path + @date_prev.strftime('%Y%m') %></li>
+  <li><%= link_to 'Today', root_path %></li>
+  <li><%= link_to 'Next',  root_path + @date_next.strftime('%Y%m') %></li>
+</ul>
 <table class="table table-bordered">
   <tr>
     <th>日付</th>
     <th>曜日</th>
     <th>時間</th>
     <% @members.each do |m| %>
-      <th><%= link_to m.name, edit_member_schedules_path(m, yyyymm: @from_yyyymm) %></th>
+      <th><%= link_to m.name, edit_member_schedules_path(m, yyyymm: @date_here.strftime('%Y%m')) %></th>
     <% end %>
     <th>メモ</th>
   </tr>
@@ -13,7 +18,7 @@
   <% @times_name.each_with_index do |t, t_idx| %>
     <tr>
       <% if t_idx == 0 %>
-        <td rowspan="3"><%= d.strftime('%m/%d') %></td>
+        <td rowspan="3"><%= d.strftime('%Y') %><br><%= d.strftime('%m/%d') %></td>
         <td rowspan="3"><%= @weekdays_name[d.wday] %></td>
       <% end %>
 

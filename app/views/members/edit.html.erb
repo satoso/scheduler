@@ -1,0 +1,16 @@
+<%= form_for @member do |form| %>
+<table class="table table-bordered">
+  <tr>
+    <th>名前</th>
+  </tr>
+
+  <tr>
+    <td><%= form.text_field :name %></td>
+  </tr>
+</table>
+<p>
+  <%= form.button "Save", class: 'btn btn-sm btn-success' %>
+  <%= link_to "Delete", member_path(@member), method: :delete, 
+    data: { confirm: 'メンバーを削除します。' }, class: 'btn btn-sm btn-danger' %>
+</p>
+<% end %>

@@ -1,5 +1,5 @@
 class SchedulesController < ApplicationController
-  # TODO: DRY!
+  # TODO: DRY!!
   DEFAULT_DURATION_MONTHS = 1
   TIMES_NAME = %w(朝 昼 夜)
   AVAILABILITIES_VALUE = %w(○ △ × ‐)
@@ -18,7 +18,9 @@ class SchedulesController < ApplicationController
 
     @availabilities_value = AVAILABILITIES_VALUE
     @weekdays_name = WEEKDAYS_NAME
-    @from_yyyymm = from.strftime('%Y%m')
+    @date_here = from
+    @date_prev = from - DEFAULT_DURATION_MONTHS.month
+    @date_next = from + DEFAULT_DURATION_MONTHS.month
     # binding.pry
   end
 

@@ -1,0 +1,12 @@
+<table class="table table-bordered">
+  <tr>
+    <th>名前</th>
+  </tr>
+
+  <% @members.each do |m| %>
+    <tr>
+      <td><%= link_to m.name, edit_member_path(id: m.id) %></td>
+    </tr>
+  <% end %>
+</table>
+<p><%= link_to "New", new_member_path, class: 'btn btn-sm btn-primary' %></p>

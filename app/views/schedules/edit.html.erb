@@ -1,5 +1,5 @@
 <%= form_for :schedules, url: member_schedules_path, action: :patch do |form| %>
-<p><%= form.button "Edit", class: 'btn btn-sm btn-success' %></p>
+<p><%= form.button "Save", class: 'btn btn-sm btn-success' %></p>
 <table class="table table-bordered">
   <tr>
     <th>日付</th>
@@ -28,8 +28,10 @@
           <ul class="flat">
           <% @availabilities_value.each do |val| %>
             <li>
-              <%= f.radio_button :availability, val, checked: (entry.availability == val) || (entry.availability.blank? && val == '‐') %>
+              <%= f.radio_button :availability, val, 
+                checked: (entry.availability == val) || (entry.availability.blank? && val == '‐') %>
               <%= f.label val %>
+              <%# TODO: label does not link to radio_button %>
             </li>
           <% end %>
           </ul>
@@ -42,5 +44,5 @@
   <% end %>
   <% end %>
 </table>
-<p><%= form.button "Edit", class: 'btn btn-sm btn-success' %></p>
+<p><%= form.button "Save", class: 'btn btn-sm btn-success' %></p>
 <% end %>

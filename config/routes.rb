@@ -14,7 +14,7 @@ Rails.application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
-  get ':yyyymm', to: 'schedules#index'
+  get ':yyyymm', to: 'schedules#index', constraints: { yyyymm: /\d{6}/ }
   resources :members do
     resources :schedules, only: :index do
       collection do
