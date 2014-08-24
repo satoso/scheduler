@@ -50,5 +50,6 @@ gem 'pry-byebug', group: [:development, :test]
 gem 'hirb', group: [:development, :test]
 gem 'hirb-unicode', group: [:development, :test]
 # https://devcenter.heroku.com/articles/rails-4-asset-pipeline
-gem 'rails_12factor', group: [:production, :staging]
+# gem 'rails_12factor', group: [:production, :staging]
+# => fails
 
