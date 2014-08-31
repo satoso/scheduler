@@ -1,9 +1,9 @@
 class SchedulesController < ApplicationController
   # TODO: DRY!!
   DEFAULT_DURATION_MONTHS = 1
-  TIMES_NAME = %w(朝 昼 夜)
-  AVAILABILITIES_VALUE = %w(○ △ × ‐)
-  WEEKDAYS_NAME = %w(日 月 火 水 木 金 土)
+  # TIMES_NAME = %w(朝 昼 夜)
+  # AVAILABILITIES_VALUE = %w(○ △ × ‐)
+  # WEEKDAYS_NAME = %w(日 月 火 水 木 金 土)
 
   def index
     # 表示範囲を決める
@@ -11,13 +11,13 @@ class SchedulesController < ApplicationController
     return redirect_to root_path if from.nil?  # return が必要
     to = get_to(from)
     @days = disp_days(from..to)
-    @times_name = TIMES_NAME
+    # @times_name = TIMES_NAME
 
     @members = Member.all
     @schedules = Schedule.where(date: @days)
 
-    @availabilities_value = AVAILABILITIES_VALUE
-    @weekdays_name = WEEKDAYS_NAME
+    # @availabilities_value = AVAILABILITIES_VALUE
+    # @weekdays_name = WEEKDAYS_NAME
     @date_here = from
     @date_prev = from - DEFAULT_DURATION_MONTHS.month
     @date_next = from + DEFAULT_DURATION_MONTHS.month

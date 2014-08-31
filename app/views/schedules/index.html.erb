@@ -15,31 +15,25 @@
   </tr>
 
   <% @days.each do |d| %>
-  <% @times_name.each_with_index do |t, t_idx| %>
-    <tr>
-      <% if t_idx == 0 %>
-        <td rowspan="3"><%= d.strftime('%Y') %><br><%= d.strftime('%m/%d') %></td>
-        <td rowspan="3"><%= @weekdays_name[d.wday] %></td>
-      <% end %>
-
-      <td><%= t %></td>
-
-      <% @members.each do |m| %>
-        <td><%=
-          @schedules.find { |s|
-            s.date == d && s.time == t_idx && s.member_id == m.id
-          }.try(:availability) || ''
-        %></td>
-      <% end %>
-
-      <td>
-        <% @schedules.find_all { |s| s.date == d && s.time==t_idx }.each do |s| %>
-          <% unless s.note.blank? %>
-          <p><%= s.note %>(<%= @members.find { |m| m.id == s.member_id }.name %>)</p>
-          <% end %>
+    <% Schedule.times.keys.each_with_index do |t, t_idx| %>
+      <tr>
+        <% if t_idx.zero? %>
+          <td rowspan="3"><%= d.strftime('%Y') %><br><%= d.strftime('%m/%d') %></td>
+          <td rowspan="3"><%= weekday_name(d) %></td>
         <% end %>
-      </td>
-    </tr>
-  <% end %>
+
+        <td><%= time_name(t) %></td>
+
+        <% @members.each do |m| %>
+          <td><%= find_schedule_to_s(@schedules, d, t, m.id) %></td>
+        <% end %>
+
+        <td>
+          <% build_notes(@schedules, d, t, @members).each do |n| %>
+            <p><%= n[:note] %>(<%= n[:member] %>)</p>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
   <% end %>
 </table>
