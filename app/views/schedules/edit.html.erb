@@ -1,48 +1,46 @@
 <%= form_for :schedules, url: member_schedules_path, action: :patch do |form| %>
-<p><%= form.button "Save", class: 'btn btn-sm btn-success' %></p>
-<table class="table table-bordered">
-  <tr>
-    <th>日付</th>
-    <th>曜日</th>
-    <th>時間</th>
-    <% @members.each do |m| %>
-      <th><%= link_to m.name, edit_member_schedules_path(m, yyyymm: @from_yyyymm) %></th>
-    <% end %>
-    <th>メモ</th>
-  </tr>
-
-  <% @days.each do |d| %>
-  <% @times_name.each_with_index do |t, t_idx| %>
+  <p><%= form.button "Save", class: 'btn btn-sm btn-success' %></p>
+  <table class="table table-bordered">
     <tr>
-      <% if t_idx == 0 %>
-        <td rowspan="3"><%= d.strftime('%m/%d') %></td>
-        <td rowspan="3"><%= @weekdays_name[d.wday] %></td>
-      <% end %>
-
-      <td><%= t %></td>
-
+      <th>日付</th>
+      <th>曜日</th>
+      <th>時間</th>
       <% @members.each do |m| %>
-        <% entry = @schedules.find { |s| s.date == d && s.time == t_idx && s.member_id == m.id } %>
-        <%= fields_for :schedules, entry, index: entry.id do |f| %>
-        <td>
-          <ul class="flat">
-          <% @availabilities_value.each do |val| %>
-            <li>
-              <%= f.radio_button :availability, val, 
-                checked: (entry.availability == val) || (entry.availability.blank? && val == '‐') %>
-              <%= f.label val %>
-              <%# TODO: label does not link to radio_button %>
-            </li>
-          <% end %>
-          </ul>
-        </td>
-        <td><%= f.text_field :note %></td>
-        <% end %>
+        <th><%= m.name %></th>
       <% end %>
-
+      <th>メモ</th>
     </tr>
-  <% end %>
-  <% end %>
-</table>
-<p><%= form.button "Save", class: 'btn btn-sm btn-success' %></p>
+
+    <% @days.each do |d| %>
+      <% Schedule.times.keys.each_with_index do |t, t_idx| %>
+        <tr>
+          <% if t_idx.zero? %>
+            <td rowspan="<%= Schedule.times.count %>"><%= d.strftime('%Y') %><br><%= d.strftime('%m/%d') %></td>
+            <td rowspan="<%= Schedule.times.count %>"><%= weekday_name(d) %></td>
+          <% end %>
+
+          <td><%= time_name(t) %></td>
+
+          <% @members.each do |m| %>
+            <% entry = find_schedule_entry(@schedules, d, t, m.id) %>
+            <%= fields_for :schedules, entry, index: entry.id do |f| %>
+              <td>
+                <ul class="flat">
+                  <% availabilities_ordered.each do |avty| %>
+                    <li>
+                      <%= f.radio_button :availability, avty, checked: entry.availability == avty %>
+                      <%= f.label :availability, availability_value(avty) %>
+                      <%# TODO: label does not link to radio_button %>
+                    </li>
+                  <% end %>
+                </ul>
+              </td>
+              <td><%= f.text_field :note, class: 'form-control' %></td>
+            <% end %>
+          <% end %>
+        </tr>
+      <% end %>
+    <% end %>
+  </table>
+  <p><%= form.button "Save", class: 'btn btn-sm btn-success' %></p>
 <% end %>

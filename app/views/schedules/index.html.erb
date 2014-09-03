@@ -18,14 +18,14 @@
     <% Schedule.times.keys.each_with_index do |t, t_idx| %>
       <tr>
         <% if t_idx.zero? %>
-          <td rowspan="3"><%= d.strftime('%Y') %><br><%= d.strftime('%m/%d') %></td>
-          <td rowspan="3"><%= weekday_name(d) %></td>
+          <td rowspan="<%= Schedule.times.count %>"><%= d.strftime('%Y') %><br><%= d.strftime('%m/%d') %></td>
+          <td rowspan="<%= Schedule.times.count %>"><%= weekday_name(d) %></td>
         <% end %>
 
         <td><%= time_name(t) %></td>
 
         <% @members.each do |m| %>
-          <td><%= find_schedule_to_s(@schedules, d, t, m.id) %></td>
+          <td><%= find_schedule_availability(@schedules, d, t, m.id) %></td>
         <% end %>
 
         <td>
