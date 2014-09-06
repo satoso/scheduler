@@ -32,7 +32,7 @@ class SchedulesController < ApplicationController
           date:          d,
           time:          t,
           member_id:     @members.first.id,
-          availability:  :no_answer,
+          availability:  Schedule.availabilities[:no_answer],
           note:          '',
         )
       end
