@@ -9,7 +9,7 @@
 #require 'date'
 
 (1..5).each do |n|
-  Member.create(name: 'メンバ' + n.to_s)
+  Member.create(name: 'メンバ' + n.to_s, order: n)
 end
 
 (1..5).each do |n|
