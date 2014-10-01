@@ -9,7 +9,7 @@ class SchedulesController < ApplicationController
     to = get_to(from)
     @days = disp_days(from..to)
 
-    @members = Member.all
+    @members = Member.all.order(:order)
     @schedules = Schedule.where(date: @days)
 
     @date_here = from
@@ -30,7 +30,7 @@ class SchedulesController < ApplicationController
       Schedule.times.keys.each do |t|
         Schedule.find_or_create_by(
           date:          d,
-          time:          t,
+          time:          t.to_sym,
           member_id:     @members.first.id,
           availability:  Schedule.availabilities[:no_answer],
           note:          '',

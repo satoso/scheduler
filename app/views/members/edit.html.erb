@@ -2,10 +2,12 @@
 <table class="table table-bordered">
   <tr>
     <th>名前</th>
+    <th>表示順</th>
   </tr>
 
   <tr>
-    <td><%= form.text_field :name %></td>
+    <td><%= form.text_field :name, class: 'form-control' %></td>
+    <td><%= form.text_field :order, class: 'form-control' %></td>
   </tr>
 </table>
 <p>

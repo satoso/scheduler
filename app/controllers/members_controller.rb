@@ -1,6 +1,6 @@
 class MembersController < ApplicationController
   def index
-    @members = Member.all
+    @members = Member.all.order(:order)
   end
 
   def edit
@@ -9,6 +9,9 @@ class MembersController < ApplicationController
 
   def new
     @member = Member.new
+    # 新規メンバのデフォルト order は，現在の最大値に10を加えて1の位を切り捨てた数
+    # e.g. 現在の最大値が13の場合は20がデフォルト
+    @member.order = (Member.maximum(:order) + 10) / 10 * 10
   end
 
   def create
@@ -30,6 +33,6 @@ class MembersController < ApplicationController
 
   private
   def member_params
-    params.require(:member).permit(:name)
+    params.require(:member).permit(:name, :order)
   end
 end

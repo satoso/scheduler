@@ -1,11 +1,13 @@
 <table class="table table-bordered">
   <tr>
     <th>名前</th>
+    <th>表示順</th>
   </tr>
 
   <% @members.each do |m| %>
     <tr>
       <td><%= link_to m.name, edit_member_path(id: m.id) %></td>
+      <td><%= m.order %></td>
     </tr>
   <% end %>
 </table>

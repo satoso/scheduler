@@ -22,20 +22,21 @@
           <td><%= time_name(t) %></td>
 
           <% @members.each do |m| %>
-            <% entry = find_schedule_entry(@schedules, d, t, m.id) %>
-            <%= fields_for :schedules, entry, index: entry.id do |f| %>
-              <td>
-                <ul class="flat">
-                  <% availabilities_ordered.each do |avty| %>
-                    <li>
-                      <%= f.radio_button :availability, avty, checked: entry.availability == avty %>
-                      <%= f.label :availability, availability_value(avty) %>
-                      <%# TODO: label does not link to radio_button %>
-                    </li>
-                  <% end %>
-                </ul>
-              </td>
-              <td><%= f.text_field :note, class: 'form-control' %></td>
+            <% if entry = find_schedule_entry(@schedules, d, t, m.id) %>
+              <%= fields_for :schedules, entry, index: entry.id do |f| %>
+                <td>
+                  <ul class="flat">
+                    <% availabilities_ordered.each do |avty| %>
+                      <li>
+                        <%= f.radio_button :availability, avty, checked: entry.availability == avty %>
+                        <%= f.label :availability, availability_value(avty) %>
+                        <%# TODO: label does not link to radio_button %>
+                      </li>
+                    <% end %>
+                  </ul>
+                </td>
+                <td><%= f.text_field :note, class: 'form-control' %></td>
+              <% end %>
             <% end %>
           <% end %>
         </tr>
