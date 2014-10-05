@@ -12,3 +12,10 @@ ul.flat li {
   display: inline-block;
   min-width: 3em;
 }
+.clickable {
+  cursor: pointer;
+
+  &:hover {
+    background-color: #d9edf7;
+  }
+}

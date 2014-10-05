@@ -2,17 +2,26 @@
   <p><%= form.button "Save", class: 'btn btn-sm btn-success' %></p>
   <table class="table table-bordered">
     <tr>
-      <th>日付</th>
-      <th>曜日</th>
-      <th>時間</th>
+      <th rowspan="2">日付</th>
+      <th rowspan="2">曜日</th>
+      <th rowspan="2">時間</th>
       <% @members.each do |m| %>
-        <th><%= m.name %></th>
+        <th colspan="4"><%= m.name %></th>
       <% end %>
-      <th>メモ</th>
+      <% if false %>
+        <th rowspan="2">メモ</th>
+      <% end %>
+    </tr>
+
+    <tr>
+      <td class="clickable" id="all-ok"><a>全○</a></td>
+      <td class="clickable" id="all-pending"><a>全△</a></td>
+      <td class="clickable" id="all-ng"><a>全×</a></td>
+      <td class="clickable" id="all-no_answer"><a>全‐</a></td>
     </tr>
 
     <% @days.each do |d| %>
-      <% Schedule.times.keys.each_with_index do |t, t_idx| %>
+      <% Schedule.times.each_key.with_index do |t, t_idx| %>
         <tr>
           <% if t_idx.zero? %>
             <td rowspan="<%= Schedule.times.count %>"><%= d.strftime('%Y') %><br><%= d.strftime('%m/%d') %></td>
@@ -24,18 +33,15 @@
           <% @members.each do |m| %>
             <% if entry = find_schedule_entry(@schedules, d, t, m.id) %>
               <%= fields_for :schedules, entry, index: entry.id do |f| %>
-                <td>
-                  <ul class="flat">
-                    <% availabilities_ordered.each do |avty| %>
-                      <li>
-                        <%= f.radio_button :availability, avty, checked: entry.availability == avty %>
-                        <%= f.label :availability, availability_value(avty) %>
-                        <%# TODO: label does not link to radio_button %>
-                      </li>
-                    <% end %>
-                  </ul>
-                </td>
-                <td><%= f.text_field :note, class: 'form-control' %></td>
+                <% availabilities_ordered.each do |avty| %>
+                  <td class="clickable rbtn-container">
+                    <%= f.radio_button :availability, avty, checked: entry.availability == avty %>
+                    <%= f.label ('availability_' + avty).to_sym, availability_value(avty) %>
+                  </td>
+                <% end %>
+                <% if false %>
+                  <td><%= f.text_field :note, class: 'form-control' %></td>
+                <% end %>
               <% end %>
             <% end %>
           <% end %>
