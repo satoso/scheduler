@@ -1,7 +1,7 @@
 <ul class="pager">
-  <li><%= link_to 'Prev',  root_path + @date_prev.strftime('%Y%m') %></li>
-  <li><%= link_to 'Today', root_path %></li>
-  <li><%= link_to 'Next',  root_path + @date_next.strftime('%Y%m') %></li>
+  <li><%= link_to '< Prev', root_path_date(@date_prev) %></li>
+  <li><%= link_to 'Today',  root_path %></li>
+  <li><%= link_to 'Next >', root_path_date(@date_next) %></li>
 </ul>
 <div style="overflow-x: scroll;">
 <table class="table table-bordered">

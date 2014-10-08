@@ -18,10 +18,10 @@ Rails.application.routes.draw do
   resources :members do
     resources :schedules, only: :index do
       collection do
-        post :create
+        post :create, path: ':yyyymm'
         # get  'edit/:yyyymm', to: :edit    # => これだと edit_member_schedule_path helper がつくられない
         get  :edit,   path: 'edit/:yyyymm'  # => OK
-        put  :update
+        put  :update, path: ':yyyymm'
       end
     end
   end

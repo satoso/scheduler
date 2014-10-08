@@ -1,6 +1,7 @@
 <%= form_for @member do |form| %>
   <%= render 'form_table', form: form %>
   <p>
+    <%= link_to 'Cancel', members_path, class: 'btn btn-sm btn-link' %>
     <%= form.button 'Save', class: 'btn btn-sm btn-success' %>
   </p>
 <% end %>

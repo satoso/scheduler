@@ -12,6 +12,10 @@ module SchedulesHelper
     'ng'        => '×'
   }
 
+  def root_path_date(date)
+    root_path + date.strftime('%Y%m')
+  end
+
   def weekday_name(date)
     WEEKDAY_NAMES[date.wday] || ''
   end

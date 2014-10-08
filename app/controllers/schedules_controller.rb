@@ -39,11 +39,12 @@ class SchedulesController < ApplicationController
     end
 
     @schedules = Schedule.where(date: @days, member_id: @members.first.id)
+    @date_here = from
   end
 
   def create
     Schedule.update(schedule_params.keys, schedule_params.values)
-    redirect_to root_path
+    redirect_to root_path + params[:yyyymm]
   end
 
   private
