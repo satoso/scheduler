@@ -27,15 +27,25 @@ class SchedulesController < ApplicationController
     @members = Member.where(id: params[:member_id])
 
     @days.each do |d|
-      Schedule.times.keys.each do |t|
+      Schedule.times.each_value do |v|
         Schedule.find_or_create_by(
           date:          d,
-          time:          t.to_sym,
+          time:          v,
           member_id:     @members.first.id,
           availability:  Schedule.availabilities[:no_answer],
           note:          '',
         )
       end
+      ### doesn't work on Heroku
+      # Schedule.times.keys.each do |t|
+      #   Schedule.find_or_create_by(
+      #     date:          d,
+      #     time:          t.to_sym,
+      #     member_id:     @members.first.id,
+      #     availability:  Schedule.availabilities[:no_answer],
+      #     note:          '',
+      #   )
+      # end
     end
 
     @schedules = Schedule.where(date: @days, member_id: @members.first.id)
