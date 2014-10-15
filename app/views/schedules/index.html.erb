@@ -1,10 +1,15 @@
 <ul class="pager">
-  <li><%= link_to '< Prev', root_path_date(@date_prev) %></li>
+  <li class="previous"><%= link_to '< Prev', root_path_date(@date_prev) %></li>
+  <li>
+    <span class="form-inline text-nowrap" style="display:inline;width:18em;">
+      <%= text_field_tag 'year',  @date_here.strftime('%Y'), class: 'form-control form-inline text-center', style: 'width:5em;', maxlength: 4 %>/<%= text_field_tag 'month', @date_here.strftime('%m'), class: 'form-control form-inline text-center', style: 'width:4em;', maxlength: 2 %>
+    </span>
+  </li>
   <li><%= link_to 'Today',  root_path %></li>
-  <li><%= link_to 'Next >', root_path_date(@date_next) %></li>
+  <li class="next"><%= link_to 'Next >', root_path_date(@date_next) %></li>
 </ul>
 <div style="overflow-x: scroll;">
-<table class="table table-bordered">
+<table class="table table-bordered table-condensed">
   <tr>
     <td></td>
     <% @days.each do |d| %>
