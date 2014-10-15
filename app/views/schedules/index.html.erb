@@ -1,40 +1,35 @@
 <ul class="pager">
   <li class="previous"><%= link_to '< Prev', root_path_date(@date_prev) %></li>
-  <li>
-    <span class="form-inline text-nowrap" style="display:inline;width:18em;">
-      <%= text_field_tag 'year',  @date_here.strftime('%Y'), class: 'form-control form-inline text-center', style: 'width:5em;', maxlength: 4 %>/<%= text_field_tag 'month', @date_here.strftime('%m'), class: 'form-control form-inline text-center', style: 'width:4em;', maxlength: 2 %>
-    </span>
-  </li>
   <li><%= link_to 'Today',  root_path %></li>
   <li class="next"><%= link_to 'Next >', root_path_date(@date_next) %></li>
 </ul>
 <div style="overflow-x: scroll;">
-<table class="table table-bordered table-condensed">
-  <tr>
-    <td></td>
-    <% @days.each do |d| %>
-      <td colspan="<%= Schedule.times.count %>"><%= d.strftime('%m/%d') %>(<%= weekday_name(d) %>)</td>
-    <% end %>
-  </tr>
-
-  <tr>
-    <td></td>
-    <% @days.each do |d| %>
-      <% Schedule.times.each_key do |t| %>
-        <td><%= time_name(t) %></td>
-      <% end %>
-    <% end %>
-  </tr>
-
-  <% @members.each do |m| %>
+  <table class="table table-bordered table-condensed">
     <tr>
-      <td style="white-space: nowrap;"><%= link_to m.name, edit_member_schedules_path(m, yyyymm: @date_here.strftime('%Y%m')) %></td>
+      <td></td>
+      <% @days.each do |d| %>
+        <td colspan="<%= Schedule.times.count %>"><%= d.strftime('%m/%d') %>(<%= weekday_name(d) %>)</td>
+      <% end %>
+    </tr>
+
+    <tr>
+      <td></td>
       <% @days.each do |d| %>
         <% Schedule.times.each_key do |t| %>
-          <td><%= find_schedule_availability(@schedules, d, t, m.id) %></td>
+          <td><%= time_name(t) %></td>
         <% end %>
       <% end %>
     </tr>
-  <% end %>
-</table>
+
+    <% @members.each do |m| %>
+      <tr>
+        <td style="white-space: nowrap;"><%= link_to m.name, edit_member_schedules_path(m, yyyymm: @date_here.strftime('%Y%m')) %></td>
+        <% @days.each do |d| %>
+          <% Schedule.times.each_key do |t| %>
+            <td><%= find_schedule_availability(@schedules, d, t, m.id) %></td>
+          <% end %>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
 </div>
